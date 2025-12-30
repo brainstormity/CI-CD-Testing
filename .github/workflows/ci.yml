@@ -35,11 +35,11 @@ jobs:
       run: |
         pytest test_api.py
 
-    - name: Notify Discord on Failure
-      if: failure()
+    - name: Notify Discord
+      if: always()
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       run: |
         curl -H "Content-Type: application/json" \
-             -d "{\"content\": \"❌ **CI Pipeline Failed!** \nRepo: ${{ github.repository }} \nCommit: ${{ github.sha }}\"}" \
+             -d "{\"content\": \"🚀 **CI Pipeline Finished!** \nStatus: ${{ job.status }} \nRepo: ${{ github.repository }} \nCommit: ${{ github.sha }}\"}" \
              $DISCORD_WEBHOOK
