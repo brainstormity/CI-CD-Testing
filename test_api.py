@@ -38,7 +38,7 @@ def test_create_item(api_request_context: APIRequestContext):
     # Verify it can be fetched
     get_response = api_request_context.get("/items/100")
     assert get_response.ok
-    assert get_response.json()["name"] == "Headpones"
+    assert get_response.json()["name"] == "Headphones"
 
 def test_get_invalid_item(api_request_context: APIRequestContext):
     """Test fetching a non-existent item."""
