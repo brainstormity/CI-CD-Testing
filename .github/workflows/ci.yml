@@ -40,6 +40,22 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       run: |
+        STATUS="${{ job.status }}"
+        COLOR=3066993 # Green
+        if [ "$STATUS" != "success" ]; then COLOR=15158332; fi # Red
+        
         curl -H "Content-Type: application/json" \
-             -d "{\"content\": \"🚀 **CI Pipeline Finished!** \nStatus: ${{ job.status }} \nRepo: ${{ github.repository }} \nCommit: ${{ github.sha }}\"}" \
+             -d "{
+                  \"embeds\": [{
+                    \"title\": \"🚀 CI Pipeline Results\",
+                    \"color\": $COLOR,
+                    \"fields\": [
+                      { \"name\": \"Status\", \"value\": \"$STATUS\", \"inline\": true },
+                      { \"name\": \"Repository\", \"value\": \"${{ github.repository }}\", \"inline\": true },
+                      { \"name\": \"Commit\", \"value\": \"${{ github.sha }}\" }
+                    ],
+                    \"footer\": { \"text\": \"Triggered by ${{ github.actor }}\" },
+                    \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+                  }]
+                }" \
              $DISCORD_WEBHOOK
